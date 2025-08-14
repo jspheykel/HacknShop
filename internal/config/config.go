@@ -18,10 +18,10 @@ func (c Config) DSN() string {
 
 func Default() Config {
 	return Config{
-		DBUser: "heykel",
-		DBPass: "310103",
-		DBHost: "127.0.0.1",
-		DBPort: 3306,
-		DBName: "hacknshop_db",
+		DBUser: "avnadmin",
+		DBPass: "AVNS_bOzy9VzKp8zsu1AyOen",
+		DBHost: "mysql-jhp3101-geeksheykel-a001.h.aivencloud.com",
+		DBPort: 21861,
+		DBName: "hacknshopdb",
 	}
 }
