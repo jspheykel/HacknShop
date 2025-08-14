@@ -7,6 +7,7 @@ import (
 )
 
 type AdminActions interface {
+	ListAllGames()
 	AddGame()
 	UpdateStockPrice()
 	DeleteGame()
@@ -18,29 +19,32 @@ type AdminActions interface {
 func AdminMenu(act AdminActions) {
 	for {
 		fmt.Println("\n=== Admin Menu ===")
-		fmt.Println("1) Add Games")
-		fmt.Println("2) Update Stocks & Price")
-		fmt.Println("3) Delete Games")
-		fmt.Println("4) User Reports")
-		fmt.Println("5) Order Reports")
-		fmt.Println("6) Stock Reports")
-		fmt.Println("7) Exit")
+		fmt.Println("1) List All Games (Table)")
+		fmt.Println("2) Add Games")
+		fmt.Println("3) Update Stocks & Price")
+		fmt.Println("4) Delete Games")
+		fmt.Println("5) User Reports")
+		fmt.Println("6) Order Reports")
+		fmt.Println("7) Stock Reports")
+		fmt.Println("8) Exit")
 		choice := util.Prompt("Choose: ")
 
 		switch choice {
 		case "1":
-			act.AddGame()
+			act.ListAllGames()
 		case "2":
-			act.UpdateStockPrice()
+			act.AddGame()
 		case "3":
-			act.DeleteGame()
+			act.UpdateStockPrice()
 		case "4":
-			act.UserReports()
+			act.DeleteGame()
 		case "5":
-			act.OrderReports()
+			act.UserReports()
 		case "6":
-			act.StockReports()
+			act.OrderReports()
 		case "7":
+			act.StockReports()
+		case "8":
 			return
 		default:
 			fmt.Println("Invalid choice.")
