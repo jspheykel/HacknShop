@@ -17,15 +17,15 @@ type UserActions interface {
 
 func UserMenu(act UserActions) {
 	for {
-		fmt.Println("\n=== User Menu ===")
-		fmt.Println("1) List Categories")
-		fmt.Println("2) List Games By Category")
-		fmt.Println("3) Search Games")
-		fmt.Println("4) Add to Cart (by Game ID)")
-		fmt.Println("5) View Cart")
-		fmt.Println("6) Checkout")
-		fmt.Println("7) Exit")
-		choice := util.Prompt("Choose: ")
+		fmt.Println(util.Cyan + util.Bold + "\n=== User Menu ===" + util.Reset)
+		fmt.Println(util.Yellow + "1)" + util.Reset + " List Categories")
+		fmt.Println(util.Yellow + "2)" + util.Reset + " List Games By Category")
+		fmt.Println(util.Yellow + "3)" + util.Reset + " Search Games")
+		fmt.Println(util.Yellow + "4)" + util.Reset + " Add to Cart (by Game ID)")
+		fmt.Println(util.Yellow + "5)" + util.Reset + " View Cart")
+		fmt.Println(util.Yellow + "6)" + util.Reset + " Checkout")
+		fmt.Println(util.Yellow + "7)" + util.Reset + " Logout")
+		choice := util.Prompt(util.Green + "Choose: " + util.Reset)
 
 		switch choice {
 		case "1":
@@ -43,7 +43,7 @@ func UserMenu(act UserActions) {
 		case "7":
 			return
 		default:
-			fmt.Println("Invalid choice.")
+			fmt.Println(util.Red + "Invalid choice." + util.Reset)
 		}
 	}
 }

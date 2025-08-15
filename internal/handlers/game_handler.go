@@ -98,7 +98,8 @@ func (r *GameHandler) DeleteGame(ctx context.Context, gameID int64, hard bool) e
 
 func (r *GameHandler) ListAllGames(ctx context.Context) ([]models.GameAdminView, error) {
 	rows, err := r.DB.QueryContext(ctx, `
-        SELECT g.id, g.title, c.name AS category, g.price_cents, g.stock, g.is_active
+        SELECT g.id, g.title, c.id AS category_id, c.name AS category, 
+               g.price_cents, g.stock, g.is_active
         FROM games g
         JOIN categories c ON c.id = g.category_id
         ORDER BY g.title`)
@@ -110,7 +111,7 @@ func (r *GameHandler) ListAllGames(ctx context.Context) ([]models.GameAdminView,
 	var out []models.GameAdminView
 	for rows.Next() {
 		var v models.GameAdminView
-		if err := rows.Scan(&v.ID, &v.Title, &v.Category, &v.PriceCents, &v.Stock, &v.IsActive); err != nil {
+		if err := rows.Scan(&v.ID, &v.Title, &v.CategoryID, &v.Category, &v.PriceCents, &v.Stock, &v.IsActive); err != nil {
 			return nil, err
 		}
 		out = append(out, v)
