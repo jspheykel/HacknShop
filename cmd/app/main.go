@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/jspheykel/HacknShop/internal/cli"
@@ -352,25 +353,23 @@ func (a *adminActions) StockReports() {
 
 func main() {
 	cfg := config.Default()
-	dsn := cfg.DSN()
 
-	sqlDB, err := db.Open(dsn)
+	sqlDB, err := db.Open(cfg.DSN())
 	if err != nil {
-		panic(err)
+		fmt.Println(util.Red+"DB connect error:"+util.Reset, err)
+		fmt.Printf("Using DSN host=%s port=%d db=%s user=%s\n", cfg.DBHost, cfg.DBPort, cfg.DBName, cfg.DBUser)
+		os.Exit(1)
 	}
 	defer sqlDB.Close()
 
 	userHandler := handlers.NewUserHandler(sqlDB)
 	auth := &service.AuthService{Users: userHandler}
 
-	// On first run, help seed admin password properly:
-	// fmt.Println("Note: ensure your DB has bcrypt password hashes for login.")
-
 	for {
 		session, err := cli.LoginOrRegister(auth)
 		if err != nil {
 			if errors.Is(err, cli.ErrAppExit) {
-				fmt.Println(util.Green + "Thankyou for trusting HacknShop Games Store 👾. See you later 👋🏻!" + util.Reset)
+				fmt.Println(util.Green + "Thank you for trusting HacknShop Games Store 👾. See you later 👋🏻!" + util.Reset)
 				return
 			}
 			fmt.Println(util.Red+"Error:"+util.Reset, err)
@@ -379,16 +378,18 @@ func main() {
 
 		fmt.Printf(util.Blue+util.Bold+"Hello, %s! Welcome to HacknShop Games Store 👾!\n"+util.Reset, session.Name)
 
+		// Build handlers after successful login (share same *sql.DB)
 		gameHandler := handlers.NewGameHandler(sqlDB)
 		cartHandler := handlers.NewCartHandler(sqlDB)
 		orderHandler := handlers.NewOrderHandler(sqlDB)
+		reportHandler := handlers.NewReportHandler(sqlDB)
 
 		if session.IsAdmin {
 			acts := &adminActions{
 				GameHandler:   gameHandler,
-				ReportHandler: handlers.NewReportHandler(sqlDB),
+				ReportHandler: reportHandler,
 			}
-			cli.AdminMenu(acts)
+			cli.AdminMenu(acts) // returns on Logout → loop shows Login again
 		} else {
 			acts := &userActions{
 				GameHandler:  gameHandler,
@@ -396,9 +397,7 @@ func main() {
 				OrderHandler: orderHandler,
 				UserID:       session.UserID,
 			}
-			cli.UserMenu(acts)
+			cli.UserMenu(acts) // returns on Logout → loop shows Login again
 		}
-
 	}
-
 }
