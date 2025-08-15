@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/jspheykel/HacknShop/internal/service"
@@ -14,13 +15,18 @@ type Session struct {
 	Name    string
 }
 
+var ErrAppExit = errors.New("HacknShop")
+
 func LoginOrRegister(auth *service.AuthService) (*Session, error) {
 	for {
-		fmt.Println("=== Welcome to HacknShop ===")
-		fmt.Println("1) Login")
-		fmt.Println("2) Register")
-		fmt.Println("3) Exit")
-		choice := util.Prompt("Choose: ")
+		fmt.Println(util.Magenta + "\n====================================" + util.Reset)
+		fmt.Println(util.Magenta + util.Bold + "\n===== 👾 Welcome to HacknShop! =====" + util.Reset)
+		fmt.Println(util.Magenta + "\n=== your trusted games store 🎮🕹️ ===" + util.Reset)
+		fmt.Println(util.Magenta + "\n====================================" + util.Reset)
+		fmt.Println(util.Green + "1) Login" + util.Reset)
+		fmt.Println(util.Yellow + "2) Register" + util.Reset)
+		fmt.Println(util.Red + "3) Exit" + util.Reset)
+		choice := util.Prompt(util.Green + "Choose: " + util.Reset)
 
 		switch choice {
 		case "1":
@@ -28,7 +34,7 @@ func LoginOrRegister(auth *service.AuthService) (*Session, error) {
 			password := util.Prompt("Password: ")
 			u, err := auth.Login(context.Background(), username, password)
 			if err != nil {
-				fmt.Println("Login failed: ", err.Error())
+				fmt.Println(util.Red+"Login failed: "+util.Reset, err.Error())
 				continue
 			}
 			return &Session{UserID: u.ID, IsAdmin: u.IsAdmin, Name: u.Username}, nil
@@ -38,12 +44,12 @@ func LoginOrRegister(auth *service.AuthService) (*Session, error) {
 			password := util.Prompt("Password: ")
 			_, err := auth.Register(context.Background(), username, email, password)
 			if err != nil {
-				fmt.Println("Register failed:", err.Error())
+				fmt.Println(util.Red+"Register failed:"+util.Reset, err.Error())
 				continue
 			}
-			fmt.Println("Register success. Please login.")
+			fmt.Println(util.Green + "Register success. Please login." + util.Reset)
 		case "3":
-			return nil, fmt.Errorf("exit")
+			return nil, ErrAppExit
 		default:
 			fmt.Println("Invalid choice.")
 		}

@@ -18,16 +18,16 @@ type AdminActions interface {
 
 func AdminMenu(act AdminActions) {
 	for {
-		fmt.Println("\n=== Admin Menu ===")
-		fmt.Println("1) List All Games (Table)")
-		fmt.Println("2) Add Games")
-		fmt.Println("3) Update Stocks & Price")
-		fmt.Println("4) Delete Games")
-		fmt.Println("5) User Reports")
-		fmt.Println("6) Order Reports")
-		fmt.Println("7) Stock Reports")
-		fmt.Println("8) Exit")
-		choice := util.Prompt("Choose: ")
+		fmt.Println(util.Magenta + util.Bold + "\n=== Admin Menu ===" + util.Reset)
+		fmt.Println(util.Yellow + "1)" + util.Reset + " List All Games (Table)")
+		fmt.Println(util.Yellow + "2)" + util.Reset + " Add Games")
+		fmt.Println(util.Yellow + "3)" + util.Reset + " Update Stocks & Price")
+		fmt.Println(util.Yellow + "4)" + util.Reset + " Delete Games")
+		fmt.Println(util.Yellow + "5)" + util.Reset + " User Reports")
+		fmt.Println(util.Yellow + "6)" + util.Reset + " Order Reports")
+		fmt.Println(util.Yellow + "7)" + util.Reset + " Stock Reports")
+		fmt.Println(util.Yellow + "8)" + util.Reset + " Logout")
+		choice := util.Prompt(util.Green + "Choose: " + util.Reset)
 
 		switch choice {
 		case "1":
@@ -47,7 +47,7 @@ func AdminMenu(act AdminActions) {
 		case "8":
 			return
 		default:
-			fmt.Println("Invalid choice.")
+			fmt.Println(util.Red + "Invalid choice." + util.Reset)
 		}
 	}
 }
